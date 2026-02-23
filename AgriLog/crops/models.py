@@ -6,6 +6,8 @@ from django.utils import timezone
 
 class CropType(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["name"]
@@ -24,6 +26,8 @@ class Field(models.Model):
         blank=True,
         null=True,
     )
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["name"]
@@ -44,6 +48,8 @@ class Cultivation(models.Model):
         max_length=2, choices=Status.choices, default=Status.PROGRESS
     )
     year = models.PositiveIntegerField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-year"]
