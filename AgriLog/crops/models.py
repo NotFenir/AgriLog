@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 
 class CropType(models.Model):
@@ -19,6 +20,7 @@ class CropType(models.Model):
 class Field(models.Model):
     name = models.CharField(max_length=100)
     area_size = models.DecimalField(max_digits=5, decimal_places=2)
+    description = models.TextField(verbose_name="Opis", blank=True, null=True)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -42,8 +44,14 @@ class Cultivation(models.Model):
         COMPLETED = "CP", "Zakończono (zebrano)"
         CANCELLED = "CL", "Anulowano (nie przetrwaly)"
 
-    field = models.ForeignKey(Field, on_delete=models.SET_NULL, null=True)
-    crop_type = models.ForeignKey(CropType, on_delete=models.SET_NULL, null=True)
+    field = models.ForeignKey(
+        Field, on_delete=models.SET_NULL, null=True, related_name="cultivations"
+    )
+    crop_type = models.ForeignKey(
+        CropType, on_delete=models.SET_NULL, null=True, related_name="cultivations"
+    )
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+    notes = models.TextField(verbose_name="Opis", blank=True, null=True)
     status = models.CharField(
         max_length=2, choices=Status.choices, default=Status.PROGRESS
     )
@@ -69,6 +77,9 @@ class Cultivation(models.Model):
             )
 
     def save(self, *args, **kwargs):
+        if not self.slug:
+            base_string = f"{self.year}-{self.field.name}-{self.crop_type.name}"
+            self.slug = slugify(base_string)
         super().save(*args, **kwargs)
 
     @property
