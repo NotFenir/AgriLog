@@ -3,3 +3,4 @@ env
 requirements.txt
 *.sqlite3
 AgriLog/.env
+__pycache__
