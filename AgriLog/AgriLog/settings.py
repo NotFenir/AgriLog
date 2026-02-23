@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "crops.apps.CropsConfig",
+    "tailwind",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
