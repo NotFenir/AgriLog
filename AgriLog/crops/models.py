@@ -50,12 +50,27 @@ class Cultivation(models.Model):
     crop_type = models.ForeignKey(
         CropType, on_delete=models.SET_NULL, null=True, related_name="cultivations"
     )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="cultivations",
+        blank=True,
+        null=True,
+    )
     slug = models.SlugField(max_length=100, unique=True, blank=True)
     notes = models.TextField(verbose_name="Opis", blank=True, null=True)
     status = models.CharField(
         max_length=2, choices=Status.choices, default=Status.PROGRESS
     )
     year = models.PositiveIntegerField()
+    yield_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Plony (w tonach)",
+        blank=True,
+        null=True,
+        default=0,
+    )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -74,6 +89,13 @@ class Cultivation(models.Model):
         if self.year > current_year + 10:
             raise ValidationError(
                 {"year": f"Rok {self.year} jest zbyt odległy w przyszłości"}
+            )
+
+        if self.yield_amount < 0:
+            raise ValidationError(
+                {
+                    "yield_amount": f"Nie można wpisać ujemną wartość zebranych plonów (podano: {self.yield_amount})"
+                }
             )
 
     def save(self, *args, **kwargs):
