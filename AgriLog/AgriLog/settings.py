@@ -124,3 +124,9 @@ STATICFILES_DIRS = [
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/accounts/login/"
+# settings.py
+
+LANGUAGE_CODE = "pl"
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
