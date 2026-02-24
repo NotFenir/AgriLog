@@ -1,9 +1,38 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <main class="flex-grow-1 p-4">
-        <div class="center-block">
-            <h3>Test</h3>
-            <h2>TEST@</h2>
+<main class="flex-grow-1 p-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h5 class="text-success fw-bold">Dane podstawowe</h5>
+                    <hr>
+                    <p><strong>E-mail:</strong> {{ user.email }}</p>
+                    <p><strong>Data rejestracji:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="text-success fw-bold">Moje statystyki</h5>
+                    <div class="row text-center mt-3">
+                        <div class="col-4">
+                            <h3 class="fw-bold">{{ user.fields.count }}</h3>
+                            <small class="text-muted">Pola</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="fw-bold">{{ user.profile.total_area }} ha</h3>
+                            <small class="text-muted">Powierzchnia</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="fw-bold">3</h3>
+                            <small class="text-muted">Aktywne uprawy</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </main>
-{% endblock content %}
+    </div>
+</main>
+{% endblock %}
