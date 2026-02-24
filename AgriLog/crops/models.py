@@ -72,7 +72,7 @@ class Cultivation(models.Model):
     yield_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        verbose_name="Plony (w tonach)",
+        verbose_name="Plony (w kg)",
         blank=True,
         null=True,
         default=0,
