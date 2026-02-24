@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+import datetime
 
 
 class CropType(models.Model):
@@ -50,10 +51,13 @@ class Field(models.Model):
     def get_absolute_url(self):
         return reverse("field_detail", kwargs={"pk": self.pk})
 
-    def latest_cultivations(self):
-        latest_year = (
+    def current_year(self):
+        return (
             self.cultivations.order_by("-year").values_list("year", flat=True).first()
         )
+
+    def latest_cultivations(self):
+        latest_year = self.current_year()
         return self.cultivations.filter(year=latest_year)
 
 
@@ -90,6 +94,7 @@ class Cultivation(models.Model):
         null=True,
         default=0,
     )
+    sowing_date = models.DateField(default=datetime.date.today)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
