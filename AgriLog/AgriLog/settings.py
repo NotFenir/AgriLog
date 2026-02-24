@@ -33,8 +33,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "crops.apps.CropsConfig",
-    "tailwind",
-    "theme.apps.ThemeConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -119,5 +117,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
-
-TAILWIND_APP_NAME = "theme"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
