@@ -23,3 +23,12 @@ class Profile(models.Model):
         return (
             self.user.fields.aggregate(models.Sum("area_size"))["area_size__sum"] or 0
         )
+
+    @property
+    def total_yield_amonut(self):
+        return (
+            self.user.cultivations.aggregate(models.Sum("yield_amount"))[
+                "yield_amount__sum"
+            ]
+            or 0
+        )

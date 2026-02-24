@@ -22,11 +22,11 @@
                             <small class="text-muted">Pola</small>
                         </div>
                         <div class="col-4">
-                            <h3 class="fw-bold">{{ user.profile.total_area }} ha</h3>
+                            <h3 class="fw-bold">{{ user.profile.total_area|floatformat:2 }} ha</h3>
                             <small class="text-muted">Powierzchnia</small>
                         </div>
                         <div class="col-4">
-                            <h3 class="fw-bold">3</h3>
+                            <h3 class="fw-bold">{{ user.profile.total_yield_amonut|floatformat:2 }}</h3>
                             <small class="text-muted">Aktywne uprawy</small>
                         </div>
                     </div>
