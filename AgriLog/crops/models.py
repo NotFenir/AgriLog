@@ -37,6 +37,12 @@ class Field(models.Model):
     def __str__(self):
         return self.name
 
+    def latest_cultivations(self):
+        latest_year = (
+            self.cultivations.order_by("-year").values_list("year", flat=True).first()
+        )
+        return self.cultivations.filter(year=latest_year)
+
 
 class Cultivation(models.Model):
     class Status(models.TextChoices):

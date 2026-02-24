@@ -9,3 +9,6 @@ class WelcomePage(LoginRequiredMixin, TemplateView):
 
 class FieldPage(LoginRequiredMixin, TemplateView):
     template_name = "panels/fields.html"
+
+    def get_object(self):
+        return self.request.user
