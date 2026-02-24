@@ -9,12 +9,16 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="#"
-               class="nav-link active bg-white text-success fw-bold mb-2"
-               aria-current="page">Pulpit</a>
+            <a href="{% url 'dashboard' %}"
+               class="nav-link mb-2 {% if request.resolver_match.url_name == 'dashboard' %}active bg-white text-success fw-bold{% else %}text-white hover-opacity{% endif %}">
+                Pulpit
+            </a>
         </li>
         <li>
-            <a href="#" class="nav-link text-white hover-opacity mb-2">Moje Pola</a>
+            <a href="{% url 'fields' %}"
+               class="nav-link mb-2 {% if request.resolver_match.url_name == 'fields' %}active bg-white text-success fw-bold{% else %}text-white hover-opacity{% endif %}">
+                Moje pola
+            </a>
         </li>
         <li>
             <a href="#" class="nav-link text-white hover-opacity mb-2">Gatunki Roślin</a>
@@ -24,7 +28,7 @@
         </li>
     </ul>
     <hr>
-    <div class="d-flex align-items-center text-decoration-none">
+    <div class="d-flex align-items-center text-decoration-none {% if request.resolver_match.url_name == 'profile' %}  {% endif %}">
         <div class="dropdown px-2">
             <a href="{% url "profile" %}"
                class="d-flex align-items-center text-white text-decoration-none">
