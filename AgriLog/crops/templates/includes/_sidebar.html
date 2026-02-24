@@ -1,7 +1,4 @@
-<aside class="d-flex flex-column flex-shrink-0 p-3 text-white bg-success shadow-lg"
-       style="width: 260px;
-              height: 100vh;
-              z-index: 1050">
+<aside class="d-flex flex-column flex-shrink-0 p-3 text-white bg-success shadow-lg sidebar">
     <a href="#"
        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none px-3 pt-2">
         <span class="fs-4 fw-bold">AgriLog</span>
@@ -28,7 +25,7 @@
         </li>
     </ul>
     <hr>
-    <div class="d-flex align-items-center text-decoration-none {% if request.resolver_match.url_name == 'profile' %}  {% endif %}">
+    <div class="d-flex align-items-center text-decoration-none {% if request.resolver_match.url_name == 'profile' %}{% endif %}">
         <div class="dropdown px-2">
             <a href="{% url "profile" %}"
                class="d-flex align-items-center text-white text-decoration-none">
