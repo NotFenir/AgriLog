@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 
@@ -18,6 +19,14 @@ class CropType(models.Model):
 
 
 class Field(models.Model):
+    class SoilClass(models.TextChoices):
+        I = "I", "I klasa"
+        II = "II", "II klasa"
+        III = "III", "III klasa"
+        IV = "IV", "IV klasa"
+        V = "V", "V klasa"
+        VI = "VI", "VI klasa"
+
     name = models.CharField(max_length=100)
     area_size = models.DecimalField(max_digits=5, decimal_places=2)
     description = models.TextField(verbose_name="Opis", blank=True, null=True)
@@ -28,6 +37,7 @@ class Field(models.Model):
         blank=True,
         null=True,
     )
+    soil_class = models.TextField(choices=SoilClass.choices, default=SoilClass.V)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -36,6 +46,9 @@ class Field(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("field_detail", kwargs={"pk": self.pk})
 
     def latest_cultivations(self):
         latest_year = (
