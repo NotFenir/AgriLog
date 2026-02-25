@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Field, CropType, Cultivation
+from .models import Field, CropType, Cultivation, Treatment
 
 
 @admin.register(CropType)
@@ -22,3 +22,8 @@ class FieldAdmin(admin.ModelAdmin):
 class CultivationAdmin(admin.ModelAdmin):
     list_display = ["field", "crop_type", "status", "year", "created", "updated"]
     list_filter = ["status", "year", "field", "crop_type"]
+
+
+@admin.register(Treatment)
+class TreatmentAdmin(admin.ModelAdmin):
+    list_display = ["date", "treatment_type_display", "field", "crop_type", "created"]
