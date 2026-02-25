@@ -59,7 +59,7 @@ class FieldRenameView(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
-        messages.success(self.request, "Pomyślnie zmieniono nazwę pola")
+        messages.success(self.request, "Pomyślnie zaktualizowano dane pola")
         return super().form_valid(form)
 
     def form_invalid(self, form):

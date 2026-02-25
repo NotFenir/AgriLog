@@ -58,8 +58,19 @@ class Field(models.Model):
         )
 
     def clean(self):
-        if Field.objects.filter(owner=self.owner, name__iexact=self.name).exists():
-            raise ValidationError("Masz już pole o takiej nazwie!")
+        super().clean()
+
+        if self.owner and self.name:
+            exists = (
+                Field.objects.filter(owner=self.owner, name__iexact=self.name)
+                .exclude(pk=self.pk)
+                .exists()
+            )
+
+            if exists:
+                raise ValidationError(
+                    {"name": f"Masz już inne pole o nazwie '{self.name}'."}
+                )
 
     def latest_cultivations(self):
         latest_year = self.current_year()
