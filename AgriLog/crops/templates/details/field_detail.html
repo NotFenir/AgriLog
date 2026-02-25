@@ -157,7 +157,9 @@
                 <div class="card border-0 bg-success text-white shadow-sm rounded-4 p-4 mb-4">
                     <h5 class="fw-bold mb-3">Szybkie akcje</h5>
                     <div class="d-grid gap-2">
-                        <button class="btn btn-light fw-bold text-success rounded-3 border-0">
+                        <button class="btn btn-light fw-bold text-success rounded-3 border-0 w-100"
+                                data-bs-toggle="modal"
+                                data-bs-target="#addTreatmentModal">
                             <i class="bi bi-plus-lg me-2"></i>Dodaj zabieg
                         </button>
                         <button class="btn btn-outline-light rounded-3">
@@ -274,4 +276,60 @@
             </div>
         </div>
     </div>
+    <div class="modal fade"
+         id="addTreatmentModal"
+         tabindex="-1"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-bottom-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold">Nowy zabieg dla: {{ field.name }}</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <form method="post" action="{% url 'add_treatment' field.id %}">
+                    {% csrf_token %}
+                    <div class="modal-body px-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Rodzaj zabiegu</label>
+                                {{ treatment_form.treatment_type }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Data wykonania</label>
+                                {{ treatment_form.date }}
+                            </div>
+                            <div class="col-12" id="crop_type_wrapper" style="display: none;">
+                                <div class="p-3 bg-light rounded-3 border border-success-subtle">
+                                    <label class="form-label small fw-bold text-success text-uppercase">Roślina uprawna</label>
+                                    {{ treatment_form.crop_type }}
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Opis / Uwagi</label>
+                                {{ treatment_form.description }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0 pb-4 px-4">
+                        <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Anuluj</button>
+                        <button type="submit" class="btn btn-success fw-bold px-4">Zapisz zabieg</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    document.getElementById('id_treatment_type').addEventListener('change', function() {
+        const cropWrapper = document.getElementById('crop_type_wrapper');
+        // "SW" to kod siewu z Twojego modelu
+        if (this.value === 'SW') {
+            cropWrapper.style.display = 'block';
+        } else {
+            cropWrapper.style.display = 'none';
+        }
+    });
+    </script>
 {% endblock content %}

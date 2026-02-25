@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Field
+from .models import Field, Treatment, CropType
 
 
 class FieldNotesForm(forms.ModelForm):
@@ -28,12 +28,30 @@ class FieldRenameForm(forms.ModelForm):
         self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
-    # def clean_name(self):
-    #     name = self.cleaned_data.get("name")
-    #     if (
-    #         Field.objects.filter(owner=self.user, name__iexact=name)
-    #         .exclude(pk=self.instance.pk)
-    #         .exists()
-    #     ):
-    #         raise forms.ValidationError("Masz już pole o takiej nazwie!")
-    #     return name
+
+class TreatmentAddForm(forms.ModelForm):
+    class Meta:
+        model = Treatment
+        fields = ["treatment_type", "date", "crop_type", "description"]
+        widgets = {
+            "treatment_type": forms.Select(
+                attrs={"class": "form-select rounded-3", "id": "id_treatment_type"}
+            ),
+            "date": forms.DateInput(
+                attrs={"class": "form-control rounded-3", "type": "date"}
+            ),
+            "crop_type": forms.Select(attrs={"class": "form-select rounded-3"}),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control rounded-3",
+                    "rows": 3,
+                    "placeholder": "Opisz szczegóły zabiegu...",
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Opcjonalnie: możesz tu przefiltrować CropType, jeśli chcesz
+        self.fields["crop_type"].queryset = CropType.objects.all()
+        self.fields["crop_type"].empty_label = "Wybierz roślinę (tylko dla siewu)"
