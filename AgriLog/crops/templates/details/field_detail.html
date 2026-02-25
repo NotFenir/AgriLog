@@ -21,11 +21,11 @@
             </div>
         {% endif %}
         <div class="mb-4 d-flex align-items-center">
-            <a href="{% url 'fields' %}"
+            <a href="javascript:history.back()"
                class="btn btn-outline-success border-2 rounded-circle d-inline-flex align-items-center justify-content-center me-3"
                style="width: 45px;
                       height: 45px"
-               title="Wróć do listy pól">
+               title="Wróć">
                 <i class="bi bi-arrow-left fs-4"></i>
             </a>
             <div>
@@ -101,9 +101,13 @@
                                             <span class="text-muted">{{ cultivation.sowing_date|default:"Brak daty" }}</span>
                                         </td>
                                         <td class="text-end px-3">
-                                            <button class="btn btn-sm btn-light border">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
+                                            <div class="btn-group shadow-sm">
+                                                <a href="{% url 'cultivation_detail' cultivation.id %}"
+                                                   class="btn btn-sm btn-light border px-3"
+                                                   title="Zobacz pole">
+                                                    <i class="bi bi-eye me-1"></i> Szczegóły
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 {% empty %}
@@ -188,7 +192,7 @@
                                         <td class="py-2 fw-semibold text-dark">{{ history.crop_type }}</td>
                                         <td class="py-2 text-end">
                                             <span class="badge bg-light text-dark border">
-                                                {{ history.yield_amount|default:"0" }} <small>t/ha</small>
+                                                {{ history.yield_amount|default:"0" }} <small>kg/ha</small>
                                             </span>
                                         </td>
                                     </tr>
@@ -230,7 +234,7 @@
                             data-bs-dismiss="modal"
                             aria-label="Close"></button>
                 </div>
-                <form method="post" action="{% url 'update_field_name' field.id %}">
+                <form method="post" action="{% url 'update_field' field.id %}">
                     {% csrf_token %}
                     <div class="modal-body px-4">
                         <div class="mb-3">

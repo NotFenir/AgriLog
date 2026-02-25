@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Field, Treatment, CropType
+from .models import CropType, Cultivation, Field, Treatment
 
 
 class FieldNotesForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class FieldNotesForm(forms.ModelForm):
         fields = ["notes"]
 
 
-class FieldRenameForm(forms.ModelForm):
+class FieldEditForm(forms.ModelForm):
     class Meta:
         model = Field
         fields = ["name", "area_size", "soil_class"]
@@ -55,3 +55,29 @@ class TreatmentAddForm(forms.ModelForm):
         # Opcjonalnie: możesz tu przefiltrować CropType, jeśli chcesz
         self.fields["crop_type"].queryset = CropType.objects.all()
         self.fields["crop_type"].empty_label = "Wybierz roślinę (tylko dla siewu)"
+
+
+class CultivationEditForm(forms.ModelForm):
+    class Meta:
+        model = Cultivation
+        fields = ["status", "sowing_date", "yield_amount"]
+
+        widgets = {
+            "sowing_date": forms.DateInput(
+                attrs={"type": "date", "class": "form-control rounded-3"}
+            ),
+            "status": forms.Select(attrs={"class": "form-select rounded-3"}),
+            "yield_amount": forms.NumberInput(
+                attrs={"class": "form-control rounded-3", "step": "0.01"}
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+
+class CultivationNotesForm(forms.ModelForm):
+    class Meta:
+        model = Cultivation
+        fields = ["notes"]

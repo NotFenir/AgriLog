@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+        <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="fw-bold mb-0 text-dark">
+                    <i class="bi bi-journals text-success me-2"></i>Pełna historia upraw
+                </h5>
+                <p class="text-muted small mb-0">Zestawienie wszystkich cykli produkcyjnych w gospodarstwie</p>
+            </div>
+        </div>
+        
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 w-100">
+                    <thead class="table-light">
+                        <tr class="small text-uppercase fw-bold text-muted">
+                            <th class="ps-4 py-3" style="width: 15%">Rok / Gatunek</th>
+                            <th class="py-3" style="width: 20%">Pole</th>
+                            <th class="py-3" style="width: 15%">Status</th>
+                            <th class="py-3" style="width: 15%">Data siewu</th>
+                            <th class="py-3 text-center" style="width: 15%">Plon (kg)</th>
+                            <th class="py-3 text-end pe-4" style="width: 20%">Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cultivation in cultivations_list %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-success-subtle rounded-3 me-3 d-flex align-items-center justify-content-center text-success fw-bold" 
+                                             style="width: 45px; height: 45px; min-width: 45px;">
+                                            {{ cultivation.year|stringformat:"i"|slice:"-2:" }}
+                                        </div>
+                                        <div>
+                                            <span class="d-block fw-bold text-dark">{{ cultivation.crop_type.name }}</span>
+                                            {% if cultivation.notes %}
+                                                <small class="text-muted d-block text-truncate" style="max-width: 200px;">{{ cultivation.notes }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold text-secondary">
+                                        <i class="bi bi-geo-alt me-1"></i>{{ cultivation.field.name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if cultivation.status == 'PG' %}
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3">W trakcie</span>
+                                    {% elif cultivation.status == 'CP' %}
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3">Zebrano</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-3">Anulowano</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="text-muted small">
+                                        <i class="bi bi-calendar3 me-1"></i>
+                                        {{ cultivation.sowing_date|date:"d.m.Y"|default:"---" }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-inline-block text-center">
+                                        <span class="fw-bold text-dark d-block">{{ cultivation.yield_amount|floatformat:2 }}</span>
+                                        <small class="text-muted text-uppercase" style="font-size: 0.65rem;">kilogramów</small>
+                                    </div>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group shadow-sm">
+                                        <a href="{% url 'cultivation_detail' cultivation.id %}" class="btn btn-sm btn-light border px-3" title="Zobacz pole">
+                                            <i class="bi bi-eye me-1"></i> Szczegóły
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5">
+                                    <i class="bi bi-inbox fs-1 d-block mb-3 opacity-25"></i>
+                                    <p class="text-muted">Brak wpisów w historii upraw.</p>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

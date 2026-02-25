@@ -123,13 +123,14 @@ class Cultivation(models.Model):
     def clean(self):
         current_year = timezone.now().year
 
-        if self.year < 1970:
-            raise ValidationError({"year": f"Rok {self.year} jest zbyt dawny"})
+        if self.year:
+            if self.year < 1970:
+                raise ValidationError({"year": f"Rok {self.year} jest zbyt dawny"})
 
-        if self.year > current_year + 10:
-            raise ValidationError(
-                {"year": f"Rok {self.year} jest zbyt odległy w przyszłości"}
-            )
+            if self.year > current_year + 10:
+                raise ValidationError(
+                    {"year": f"Rok {self.year} jest zbyt odległy w przyszłości"}
+                )
 
         if self.yield_amount < 0:
             raise ValidationError(
