@@ -166,7 +166,8 @@ class Treatment(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        verbose_name="Roślina uprawna (tylko przy siewie)",
+        verbose_name="Roślina uprawna",
+        help_text="Wymagane tyklo dla zbiegu typu siew",
     )
 
     class Meta:
@@ -175,8 +176,19 @@ class Treatment(models.Model):
     def __str__(self):
         return f"{self.treatment_type} - {self.field.name} ({self.date})"
 
+    def clean(self):
+        if self.treatment_type == self.TreatmentType.SOWING and not self.crop_type:
+            raise ValidationError(
+                {
+                    "crop_type": "Musisz wybrać rośliną uprawną, jeśli chcesz dodać zabieg siewu"
+                }
+            )
+
     def save(self, *args, **kwargs):
         is_new = self.pk is None
+
+        self.full_clean()
+
         super().save(*args, **kwargs)
 
         if (
