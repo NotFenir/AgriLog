@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 import datetime
+import uuid
 
 
 class CropType(models.Model):
@@ -38,7 +39,7 @@ class Field(models.Model):
         blank=True,
         null=True,
     )
-    soil_class = models.TextField(choices=SoilClass.choices, default=SoilClass.V)
+    soil_class = models.CharField(choices=SoilClass.choices, default=SoilClass.V)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -123,11 +124,69 @@ class Cultivation(models.Model):
             )
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            base_string = f"{self.year}-{self.field.name}-{self.crop_type.name}"
-            self.slug = slugify(base_string)
+        base_string = f"{self.year}-{self.field.name}-{self.crop_type.name}"
+        new_slug = slugify(base_string)
+
+        if Cultivation.objects.filter(slug=new_slug).exclude(pk=self.pk).exists():
+            new_slug = f"{new_slug}-{str(uuid.uuid4())[:4]}"
+
+        self.slug = new_slug
         super().save(*args, **kwargs)
 
     @property
     def is_active_now(self):
         return self.year == timezone.now().year
+
+
+class Treatment(models.Model):
+    class TreatmentType(models.TextChoices):
+        SOWING = "SW", "Siew"
+        FERTILIZING = "FT", "Nawożenie"
+        PROTECTION = "PT", "Ochrona roślin"
+        HARVEST = "HV", "Zbiór"
+        PLOWING = "PL", "Orka"
+        HARROWING = "HR", "Bronowanie"
+        CULTIVING = "CT", "Gruberowanie"
+        DISCING = "DC", "Talerzowanie"
+        OTHER = "OT", "Inna czynność"
+
+    field = models.ForeignKey(
+        Field, on_delete=models.CASCADE, related_name="treatments", blank=True
+    )
+    treatment_type = models.CharField(
+        max_length=2, choices=TreatmentType.choices, default=TreatmentType.OTHER
+    )
+    date = models.DateField(verbose_name="Data wykonanie", default=datetime.date.today)
+    description = models.TextField(blank=True, verbose_name="Opis")
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    crop_type = models.ForeignKey(
+        CropType,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Roślina uprawna (tylko przy siewie)",
+    )
+
+    class Meta:
+        ordering = ["-date"]
+
+    def __str__(self):
+        return f"{self.treatment_type} - {self.field.name} ({self.date})"
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+
+        if (
+            is_new
+            and self.treatment_type == self.TreatmentType.SOWING
+            and self.crop_type
+        ):
+            Cultivation.objects.update_or_create(
+                field=self.field,
+                crop_type=self.crop_type,
+                year=self.date.year,
+                defaults={"sowing_date": self.date, "owner": self.field.owner},
+            )
