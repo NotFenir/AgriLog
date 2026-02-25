@@ -95,7 +95,7 @@ class Cultivation(models.Model):
         null=True,
         default=0,
     )
-    sowing_date = models.DateField(default=datetime.date.today)
+    sowing_date = models.DateField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -129,6 +129,9 @@ class Cultivation(models.Model):
 
         if Cultivation.objects.filter(slug=new_slug).exclude(pk=self.pk).exists():
             new_slug = f"{new_slug}-{str(uuid.uuid4())[:4]}"
+
+        if not self.sowing_date and self.year:
+            self.sowing_date = datetime.date(self.year, 9, 1)
 
         self.slug = new_slug
         super().save(*args, **kwargs)
