@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container-fluid py-4 min-vh-100 bg-light">
+        <div class="mb-4 d-flex align-items-center">
+            <a href="{% url 'fields' %}"
+               class="btn btn-outline-success border-2 rounded-circle d-inline-flex align-items-center justify-content-center me-3"
+               style="width: 45px;
+                      height: 45px"
+               title="Wróć do listy pól">
+                <i class="bi bi-arrow-left fs-4"></i>
+            </a>
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'fields' %}" class="text-decoration-none text-muted">Moje Pola</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Szczegóły</li>
+                    </ol>
+                </nav>
+                <h2 class="fw-bold text-dark mb-0">{{ field.name|default:"Bez nazwy" }}</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-12 col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold mb-4">Podstawowe informacje</h5>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4">
+                            <div class="p-3 border rounded-3 bg-light text-center text-md-start">
+                                <small class="text-muted d-block text-uppercase fw-semibold"
+                                       style="font-size: 0.7rem">Powierzchnia</small>
+                                <span class="fs-4 fw-bold text-success">{{ field.area_size }}</span> <small class="text-muted">ha</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="p-3 border rounded-3 bg-light text-center text-md-start">
+                                <small class="text-muted d-block text-uppercase fw-semibold"
+                                       style="font-size: 0.7rem">Klasa ziemi</small>
+                                <span class="fs-4 fw-bold text-dark">{{ field.soil_class|default:"---" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Aktualne uprawy</h5>
+                        <span class="badge bg-dark rounded-pill">Rok {{ field.current_year|default:"---" }}</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Gatunek</th>
+                                    <th>Data siewu</th>
+                                    <th class="text-end px-3">Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cultivation in field.latest_cultivations %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-success rounded-circle me-3"
+                                                     style="width: 10px;
+                                                            height: 10px"></div>
+                                                <span class="fw-semibold text-dark">{{ cultivation.crop_type }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted">{{ cultivation.sowing_date|default:"Brak daty" }}</span>
+                                        </td>
+                                        <td class="text-end px-3">
+                                            <button class="btn btn-sm btn-light border">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3" class="text-center py-4 text-muted">Brak aktywnych upraw na tym polu.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="card border-0 bg-success text-white shadow-sm rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold mb-3">Szybkie akcje</h5>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-light fw-bold text-success rounded-3 border-0">
+                            <i class="bi bi-plus-lg me-2"></i>Dodaj zabieg
+                        </button>
+                        <button class="btn btn-outline-light rounded-3">
+                            <i class="bi bi-calendar-event me-2"></i>Zaplanuj zbiór
+                        </button>
+                    </div>
+                </div>
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <h5 class="fw-bold mb-3 text-dark">Notatki</h5>
+                    <p class="text-muted small">Wpisz uwagi dotyczące pH gleby lub specyficznych warunków na polu.</p>
+                    <form method="post">
+                        <textarea class="form-control border-0 bg-light rounded-3"
+                                  rows="4"
+                                  name="notes"
+                                  placeholder="Np. Wapnowanie jesień 2025...">{{ field.notes|default:"" }}</textarea>
+                        {% csrf_token %}
+                        <button class="btn btn-dark btn-sm mt-3 w-100 rounded-3 py-2">
+                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>Zapisz notatkę
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

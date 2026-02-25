@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    <main class="flex-grow-1 bg-light p-4" style="min-height: 100vh;">
+    <main class="flex-grow-1 bg-light p-4 min-vh-100">
         <div class="mb-4">
             <h2 class="fw-bold text-dark">Moje Pola</h2>
         </div>
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
-                            <a href="#" class="btn btn-success px-4 rounded-pill">Zarządzaj</a>
+                            <a href="{{ field.get_absolute_url }}" class="btn btn-success px-4 rounded-pill">Zarządzaj</a>
                             <div class="action-icons text-muted">
                                 <i class="bi bi-pencil-square me-2"></i>
                                 <i class="bi bi-trash"></i>
