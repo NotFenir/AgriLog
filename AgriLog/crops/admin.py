@@ -26,4 +26,4 @@ class CultivationAdmin(admin.ModelAdmin):
 
 @admin.register(Treatment)
 class TreatmentAdmin(admin.ModelAdmin):
-    list_display = ["date", "treatment_type_display", "field", "crop_type", "created"]
+    list_display = ["date", "treatment_type", "field", "crop_type", "created"]
