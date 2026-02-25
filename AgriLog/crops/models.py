@@ -142,6 +142,7 @@ class Treatment(models.Model):
     class TreatmentType(models.TextChoices):
         SOWING = "SW", "Siew"
         FERTILIZING = "FT", "Nawożenie"
+        LIMING = "LM", "Wapnowanie"
         PROTECTION = "PT", "Ochrona roślin"
         HARVEST = "HV", "Zbiór"
         PLOWING = "PL", "Orka"
