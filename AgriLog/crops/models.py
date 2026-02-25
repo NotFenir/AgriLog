@@ -30,7 +30,7 @@ class Field(models.Model):
 
     name = models.CharField(max_length=100)
     area_size = models.DecimalField(max_digits=5, decimal_places=2)
-    note = models.TextField(verbose_name="Opis", blank=True, null=True)
+    notes = models.TextField(verbose_name="Opis", blank=True, null=True)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
