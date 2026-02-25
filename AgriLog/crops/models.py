@@ -57,6 +57,10 @@ class Field(models.Model):
             self.cultivations.order_by("-year").values_list("year", flat=True).first()
         )
 
+    def clean(self):
+        if Field.objects.filter(owner=self.owner, name__iexact=self.name).exists():
+            raise ValidationError("Masz już pole o takiej nazwie!")
+
     def latest_cultivations(self):
         latest_year = self.current_year()
         return self.cultivations.filter(year=latest_year)
